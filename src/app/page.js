@@ -37,7 +37,7 @@ export default function Home() {
     <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900 text-slate-100">
       <div className="w-full max-w-3xl bg-slate-800 rounded-xl shadow-2xl border border-slate-700 p-8">
         <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400 mb-2">
-          Custom .pth LLM Workspace
+          TecX LLM Workspace
         </h1>
         <p className="text-sm text-slate-400 mb-6">
           Deploying direct custom checkpoint weight inferences to Vercel Serverless runtimes.
@@ -59,7 +59,7 @@ export default function Home() {
             disabled={loading}
             className="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-teal-600 focus:outline-none disabled:opacity-50 transition duration-150"
           >
-            {loading ? 'Processing Input Matrix...' : 'Run .pth Inference'}
+            {loading ? 'Processing Input Matrix...' : 'Run TecX LLM Inference'}
           </button>
         </form>
 
