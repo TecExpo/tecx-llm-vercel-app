@@ -36,6 +36,22 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900 text-slate-100">
       <div className="w-full max-w-3xl bg-slate-800 rounded-xl shadow-2xl border border-slate-700 p-8">
+        
+        {/* ─── COMPANY DETAILS BANNER IMAGE ─── */}
+        <div className="w-full mb-6 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 flex items-center justify-center">
+          <img 
+            src="/favicon.jpg" 
+            //src="/company-banner.png" 
+            alt="TecX Company Details Banner" 
+            className="w-full h-auto object-cover"
+            onError={(e) => {
+              // Graceful fallback display rule if the image is missing from the public folder
+              e.target.style.display = 'none';
+            }}
+          />
+        </div>
+        {/* ──────────────────────────────────── */}
+
         <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400 mb-2">
           TecX LLM Workspace
         </h1>
