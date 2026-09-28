@@ -5,7 +5,8 @@ TecX (Technology Engineering Computation Expansion ) LLM Vercel App
 tecx-llm-vercel-app/
 ├── api/
 │   ├── index.py          # Python Serverless API to load .pth and run inference
-│   └── requirements.txt  # Python backend dependencies
+│   ├── requirements.txt  # Python backend dependencies
+│   └── model.pth         <--- SAVE YOUR FILE HERE
 ├── public/
 │   └── favicon.ico       # Website icon
 ├── src/
@@ -17,12 +18,4 @@ tecx-llm-vercel-app/
 ├── next.config.mjs       # Next.js configuration redirection rules
 ├── package.json          # Frontend packages and scripts
 └── README.md             # Project documentation
-```
-```
-tecx-llm-vercel-app/
-├── api/
-│   ├── index.py
-│   ├── requirements.txt
-│   └── model.pth         <--- SAVE YOUR FILE HERE
-├── public/
 ```
