@@ -1,40 +1,22 @@
-"""
-This houses a simple Flask/Python handler that handles incoming HTTP requests, unpacks your prompt, and loads your .pth file weights. Make sure to drop your custom architecture class here.
-"""
-
 from flask import Flask, request, jsonify
 import os
-import torch
-import torch.nn as nn
+import numpy as np
+import onnxruntime as ort
 
 app = Flask(__name__)
 
-# --- DEFINE YOUR LLM MODEL ARCHITECTURE HERE ---
-class SimpleLLM(nn.Module):
-    def __init__(self, vocab_size=1000, embed_dim=64):
-        super(SimpleLLM, self).__init__()
-        self.embedding = nn.Embedding(vocab_size, embed_dim)
-        self.fc = nn.Linear(embed_dim, vocab_size)
-        
-    def forward(self, x):
-        x = self.embedding(x)
-        x = self.fc(x.mean(dim=1))
-        return x
+# Resolve path to the lightweight ONNX model file
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "model.onnx")
 
-# Initialize and load model
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "model.pth")
-model = SimpleLLM()
-
-# Dummy file creation for demonstration if it doesn't exist
-if not os.path.exists(MODEL_PATH):
-    torch.save(model.state_dict(), MODEL_PATH)
-
-# Load your custom trained .pth file weights securely
+# Load ONNX session (This consumes almost no memory/bundle size)
 try:
-    model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
-    model.eval()
+    if os.path.exists(MODEL_PATH):
+        session = ort.InferenceSession(MODEL_PATH)
+    else:
+        session = None
 except Exception as e:
-    print(f"Error loading model weights: {e}")
+    print(f"Error loading ONNX model: {e}")
+    session = None
 
 @app.route("/api/generate", methods=["POST"])
 def generate_text():
@@ -44,10 +26,21 @@ def generate_text():
     if not user_prompt:
         return jsonify({"error": "Prompt cannot be empty"}), 400
         
+    if session is None:
+        return jsonify({"error": "Model file 'model.onnx' not found in api/ directory."}), 500
+
     try:
-        # --- PLACE YOUR CUSTOM TOKENIZATION / INFERENCE LOGIC HERE ---
-        # Fake structural logic matching an LLM process:
-        generated_output = f"Model response to: '{user_prompt}'. (Processed successfully using loaded .pth weights on Vercel CPU serverless execution)."
+        # --- PLACE YOUR CUSTOM TOKENIZATION LOGIC HERE ---
+        # Example: Convert characters/words to numbers. 
+        # For demonstration, we create a dummy token array from the prompt length
+        dummy_tokens = np.array([[1, 2, 3, 4, 5]], dtype=np.int64) 
+        
+        # Run inference using ONNX Runtime instead of heavy PyTorch
+        input_name = session.get_inputs()[0].name
+        outputs = session.run(None, {input_name: dummy_tokens})
+        
+        # --- PLACE YOUR DE-TOKENIZATION (NUMBERS TO TEXT) LOGIC HERE ---
+        generated_output = f"Model evaluated successfully via ONNX Runtime! Prompt processed: '{user_prompt}'."
         
         return jsonify({"output": generated_output})
     except Exception as e:
@@ -55,4 +48,3 @@ def generate_text():
 
 if __name__ == "__main__":
     app.run(port=5328)
-  
