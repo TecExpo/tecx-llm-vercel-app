@@ -1,7 +1,7 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Custom LLM Interface',
+  title: 'TecX LLM Interface',
   description: 'Running self-trained .pth models on Vercel',
 }
 
